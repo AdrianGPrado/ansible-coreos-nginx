@@ -1,12 +1,19 @@
-Role Name
+Ansible Role: Nginx
 =========
 
-A brief description of the role goes here.
+Installs Nginx on CoreOS servers.
+
+This role installs and configures the latest version of Nginx from the Nginx with the Nginx image from Nginx in [DockerHub](https://hub.docker.com/_/nginx/). You can add your personal configuration of servers in `/etc/nginx/conf.d/`, by specifying variables to the ansible playbook, describing the location and options to use for your particular website. There is an example in `nginx_vhost.yml.example`.
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+In order to effectively run ansible, the target machine needs to have a python interpreter. Coreos machines are minimal and do not ship with any version of python. To get around this limitation we can install [pypy](http://pypy.org/), a lightweight python interpreter. The coreos-bootstrap role will install pypy for us and we will update our inventory file to use the installed python interpreter.
+
+```
+ansible-galaxy install AdrianGPrado.coreos-bootstrap
+```
 
 Role Variables
 --------------
@@ -25,14 +32,9 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: AdrianGPrado.coreos-nginx }
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT / BSD
