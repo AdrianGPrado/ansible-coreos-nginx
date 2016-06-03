@@ -28,7 +28,15 @@ script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   # run playbook
-  - "ansible-playbook -i tests/$TEST/inventory tests/$TEST/test.yml --sudo -vvv"
+  - "ansible-playbook -i tests/$TEST/inventory tests/$TEST/test.yml --sudo"
+  # Run the playbook again, checking idempotence.
+  - >
+    ansible-playbook -i tests/$TEST/inventory tests/$TEST/test.yml --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+  # pinging host, using bootstrapped python
+  - "ansible -i tests/$TEST/inventory all -m ping"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
