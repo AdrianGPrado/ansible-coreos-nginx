@@ -12,6 +12,7 @@ addons:
     - python-pip
 
 services:
+  - etcd
   - docker
 
 install:
