@@ -2,7 +2,7 @@
 # Docker image variables
 
 nginx_container_name: 'nginx'
-nginx_docker_tag: '1.9.6'
+nginx_docker_tag: 'alpine'
 
 # Copy the files from 'default_nginx' so there is personalized welcome page
 nginx_static_html_directory: 'html'
@@ -17,7 +17,7 @@ nginx_published_ports:
 
 nginx_exposed_volumes:
   # servers volume
-  - "{{ nginx_host_directory }}/nginx.d/*.conf:{{ nginx_vhost_path }}/*.conf:ro"
+  - "{{ nginx_host_directory }}/nginx.d:{{ nginx_work_dir }}/nginx.d:ro"
   # SSL certs volume
   - "{{ nginx_host_directory }}/certs:{{ nginx_work_dir }}/certs:ro"
   # main conf file volume
