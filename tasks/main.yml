@@ -6,8 +6,8 @@
 
 - name: Start etcd
   service: name=etcd.service state=started
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
 
 - name: Install docker-py
   pip: name=docker-py version=1.2.3
