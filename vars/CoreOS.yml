@@ -1,7 +1,8 @@
 ---
 # vars file for ansible-coreos-nginx
 
-__nginx_user: root
+__nginx_user: core
+root_group: core
 
 # Docker container variables
 nginx_work_dir: /etc/nginx
