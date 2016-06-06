@@ -1,0 +1,28 @@
+---
+# Docker image variables
+
+nginx_container_name: 'nginx'
+nginx_docker_tag: '1.9.6'
+
+# Copy the files from 'default_nginx' so there is personalized welcome page
+nginx_static_html_directory: 'html'
+
+nginx_exposed_ports:
+  - '80'
+  - '443'
+
+nginx_published_ports:
+  - '80:80'
+  - '443:443'
+
+nginx_exposed_volumes:
+  # servers volume
+  - "{{ nginx_host_directory }}/nginx.d/*.conf:{{ nginx_vhost_path }}/*.conf:ro"
+  # SSL certs volume
+  - "{{ nginx_host_directory }}/certs:{{ nginx_work_dir }}/certs:ro"
+  # main conf file volume
+  - "{{ nginx_host_directory }}/nginx.conf:{{ nginx_work_dir }}/nginx.conf:ro"
+  # log volume
+  - "{{ nginx_host_directory }}/log:{{ nginx_log }}"
+  # html default web page volume
+  - "{{ nginx_host_directory }}/html:{{ nginx_root }}:ro"

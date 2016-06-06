@@ -1,2 +1,87 @@
 ---
 # defaults file for ansible-coreos-nginx
+
+container_specific_os_family:
+  - CoreOS
+
+non_container_specific_os_family:
+  - 'RedHat'
+  - 'Ubuntu'
+  - 'Debian'
+  - 'FreeBSD'
+
+# Nginx configuration variables.
+nginx_worker_processes: "1"
+nginx_worker_connections: "1024"
+nginx_multi_accept: "off"
+
+nginx_error_log: "/var/log/nginx/error.log warn"
+nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
+
+nginx_sendfile: "on"
+nginx_tcp_nopush: "on"
+nginx_tcp_nodelay: "on"
+
+nginx_keepalive_timeout: "65"
+nginx_keepalive_requests: "100"
+
+nginx_client_max_body_size: "64m"
+
+nginx_server_names_hash_bucket_size: "64"
+
+nginx_proxy_cache_path: ""
+
+nginx_extra_conf_options: ""
+# Example extra main options, used within the main nginx's context:
+#   nginx_extra_conf_options: |
+#     env VARIABLE;
+#     include /etc/nginx/main.d/*.conf;
+
+nginx_extra_http_options: ""
+# Example extra http options, printed inside the main server http config:
+#    nginx_extra_http_options: |
+#      proxy_buffering    off;
+#      proxy_set_header   X-Real-IP $remote_addr;
+#      proxy_set_header   X-Scheme $scheme;
+#      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+#      proxy_set_header   Host $http_host;
+
+nginx_remove_default_vhost: true
+
+nginx_upstreams: []
+# - name: myapp1
+#   strategy: "ip_hash" # "least_conn", etc.
+#   servers: {
+#     "srv1.example.com",
+#     "srv2.example.com weight=3",
+#     "srv3.example.com"
+#   }
+
+# These are the paths to the SSL certificate and key. This should be overwritten
+# in an encrypted vault file.
+ssl_cert_path: ''
+ssl_key_path: ''
+
+# These are the contents of the SSL certificate and key themselves. These should
+# also be overwritten in an encrypted vault file.
+ssl_cert: ''
+ssl_key: ''
+
+# This is the path to the static files for the singleuser notebook server
+notebook_static_files: /usr/local/lib/python3.4/dist-packages/notebook/static/
+
+#------------------------------------------------------------------------------
+# Vhost configuration
+#------------------------------------------------------------------------------
+
+# Place server config files under /nginx/vars
+nginx_vhosts_fnames:
+  - default_80.yml
+  - default_443.yml
+
+nginx_vhosts:
+  - '{{ default_80 }}'
+  - '{{ default_443 }}'
+
+# overwrite by user DO NOT EDIT HERE!!!
+user_nginx_vhosts: []

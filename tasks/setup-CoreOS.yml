@@ -1,14 +1,6 @@
 ---
 
-# Write Dockerfile
-
-# Copy SSL certificates
-
-# Copy virtual servers
-
-# Copy configuration
-
-# Run Docker fil
+# CoreOS needs the etcd service running.
 - name: Start etcd
   service: name=etcd.service state=started
   become: yes
@@ -17,12 +9,34 @@
 - name: Install docker-py
   pip: name=docker-py version=1.2.3
 
-- name: pull container
-  raw: docker pull nginx:1.7.1
+- name: Create Host OS nginx volumes folders
+  become: true
+  file:
+    path: "{{ nginx_host_directory }}/{{ item }}"
+    state: 'directory'
+    mode: '0755'
+  with_items:
+    - 'log'
+    - 'certs'
 
-- name: launch nginx container
-  docker:
-    image="nginx:1.7.1"
-    name="example-nginx"
-    ports="8080:80"
-    state=started
+- name: Copy default web page to Host OS
+  become: true
+  copy:
+    src: "{{ nginx_static_html_directory }}"
+    dest: "{{ nginx_host_directory }}"
+    mode: '0644'
+
+# Move files to the host OS.
+# - Copy SSL certificates
+# - Copy virtual servers
+# - Copy configuration
+
+# - name: pull container
+#   raw: docker pull nginx:1.7.1
+
+# - name: launch nginx container
+#   docker:
+#     image="nginx:1.7.1"
+#     name="example-nginx"
+#     ports="8080:80"
+#     state=started
