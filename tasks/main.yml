@@ -1,23 +1,41 @@
 ---
 # tasks file for ansible-coreos-nginx
+
+# Variable setup.
 - name: Include OS-specific variables.
-  debug:
-    msg: "{{ ansible_os_family }}"
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
+- name: Define nginx_user.
+  set_fact:
+    nginx_user: "{{ __nginx_user }}"
+  when: nginx_user is not defined
 
-- name: Install docker-py
-  pip: name=docker-py version=1.2.3
+# Setup:
+#   - write Docker file in host OS
+#   - copy SSL certificates in host OS
+#   - copy nginx.conf
+#   - copy nginx.d/*.conf virtual servers
+#   - set volumes to:
+#     - error log
+#     - access log
+- include: "setup-{{ ansible_os_family }}.yml"
 
-- name: pull container
-  raw: docker pull nginx:1.7.1
 
-- name: launch nginx container
-  docker:
-    image="nginx:1.7.1"
-    name="example-nginx"
-    ports="8080:80"
-    state=started
+
+# - name: Start etcd
+#   service: name=etcd.service state=started
+#   become: yes
+#   become_user: root
+
+# - name: Install docker-py
+#   pip: name=docker-py version=1.2.3
+
+# - name: pull container
+#   raw: docker pull nginx:1.7.1
+
+# - name: launch nginx container
+#   docker:
+#     image="nginx:1.7.1"
+#     name="example-nginx"
+#     ports="8080:80"
+#     state=started
