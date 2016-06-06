@@ -29,20 +29,40 @@
 - debug:
     msg: "{{ nginx_container_name }}"
 
-# - name: Start etcd
-#   service: name=etcd.service state=started
+- name: Copy nginx configuration in place.
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_host_directory }}/nginx.conf"
+    owner: "{{ nginx_user }}"
+    group: "{{ root_group }}"
+    mode: 0644
+#   notify:
+#     - restart-docker-nginx
+
+
+# - name: 'start-docker-nginx'
 #   become: yes
-#   become_user: root
-
-# - name: Install docker-py
-#   pip: name=docker-py version=1.2.3
-
-# - name: pull container
-#   raw: docker pull nginx:1.7.1
-
-# - name: launch nginx container
 #   docker:
-#     image="nginx:1.7.1"
-#     name="example-nginx"
-#     ports="8080:80"
-#     state=started
+#     image: "nginx:{{ nginx_docker_tag }}"
+#     name: "{{ nginx_container_name }}"
+#     volumes: '{{ nginx_exposed_volumes }}'
+#     ports: '{{ nginx_published_ports }}'
+#     expose: '{{ nginx_exposed_ports }}'
+#     state: 'started'
+#     restart_policy: 'always'
+#     log_driver: 'syslog'
+#     log_opt:
+#       syslog-tag: "{{ nginx_container_name }}"
+
+
+
+- name: launch nginx container
+  docker:
+    image: "nginx:{{ nginx_docker_tag }}"
+    name: "example-nginx"
+    ports: "80:80"
+    state: started
+    restart_policy: 'always'
+    log_driver: 'syslog'
+    log_opt:
+      syslog-tag: "{{ nginx_container_name }}"
