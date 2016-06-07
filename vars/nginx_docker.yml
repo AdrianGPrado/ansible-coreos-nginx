@@ -5,7 +5,7 @@ nginx_container_name: 'nginx'
 nginx_docker_tag: 'alpine'
 
 # Copy the files from 'default_nginx' so there is personalized welcome page
-nginx_static_html_directory: 'html'
+host_static_html_directory: html
 
 nginx_exposed_ports:
   - '80'
