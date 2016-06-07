@@ -15,8 +15,3 @@ nginx_default_vhost_path: '{{ nginx_work_dir }}/conf.d/default.conf'
 nginx_log: /var/log/nginx
 nginx_root: /usr/share/nginx/html
 nginx_pidfile: /var/run/nginx.pid
-
-# Host OS variables
-nginx_host_directory: /tmp/nginx
-nginx_host_config: "{{ nginx_host_directory }}/config"
-nginx_host_log: "{{ nginx_host_directory }}/log"

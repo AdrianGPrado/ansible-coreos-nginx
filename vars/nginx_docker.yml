@@ -1,8 +1,20 @@
 ---
 # Docker image variables
 
-nginx_container_name: 'nginx'
-nginx_docker_tag: 'alpine'
+# Host OS variables, Where are we going to store the configuration that
+# will be pushed to the docker container
+nginx_host_directory: /tmp/nginx
+nginx_host_config: "{{ nginx_host_directory }}/config"
+nginx_host_log: "{{ nginx_host_directory }}/log"
+nginx_host_docker_ids: '{{ nginx_host_directory }}/docker_ids'
+
+nginx_host_docker_image_id: 
+nginx_host_docker_container_id:
+
+nginx_container_name: nginx
+nginx_docker_tag: alpine
+
+nginx_docker_image_name: nrg_nginx
 
 # Copy the files from 'default_nginx' so there is personalized welcome page
 host_static_html_directory: html

@@ -21,6 +21,7 @@
     mode: '0755'
   with_items:
     - '{{ nginx_host_log }}'
+    - '{{ nginx_host_docker_ids }}'
     - '{{ nginx_host_config }}/certs'
     - '{{ nginx_host_config }}/etc_conf'
 
@@ -30,9 +31,23 @@
     dest: '{{ nginx_host_config }}'
     mode: '0644'
 
-- name: pull "{{ nginx_container_name }}:{{ nginx_docker_tag }}" image
+- name: Copy docker template
+  template:
+    src: Dockerfile.j2
+    dest: '{{ nginx_host_config }}/Dockerfile'
+    mode: 0644
+
+- name: Build Dockerfile image
   docker_image:
-    name: "{{ nginx_container_name }}:{{ nginx_docker_tag }}"
+    path: '{{ nginx_host_config }}'
+    name: '{{ nginx_docker_image_name }}'
+    tag: aplha
+    state: present
+  register: image_output
+
+- name: Save docker image ID
+  set_fact:
+    nginx_host_docker_image_id: '{{ image_output.image_id }}'
 
 # Move files to the host OS.
 # - Copy SSL certificates

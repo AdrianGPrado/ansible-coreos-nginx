@@ -1,0 +1,5 @@
+# Jinja2 template to create a Dockerfile 
+
+FROM {{ nginx_container_name }}:{{ nginx_docker_tag }}
+
+COPY {{ host_static_html_directory }} {{ nginx_root }}
