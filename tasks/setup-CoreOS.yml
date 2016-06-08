@@ -12,6 +12,16 @@
     - '{{ nginx_host_docker_ids }}'
     - '{{ nginx_work_dir }}'
 
+- name: Simlynk log folder to '{{ nginx_log }}'
+  become: true
+  file: 
+    src='{{ nginx_host_log }}'
+    dest='{{ nginx_log }}'
+    owner='{{ user_host_directory }}'
+    group='{{ group_host_directory }}'
+    state=link
+    mode=0755
+
 - name: Copy default web page to Host OS
   copy:
     src: '{{ host_static_html_directory }}'
