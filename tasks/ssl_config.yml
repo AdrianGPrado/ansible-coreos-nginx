@@ -12,17 +12,23 @@
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined
 
+- name: Create Host OS SSL folder:with_items
+  file:
+    path: '{{ nginx_ssl_default_path }}'
+    state: 'directory'
+    mode: '0755'
+
 - name: Copy SSL certificates to host system
   template:
     src:   '{{ item.from }}'
     dest:  '{{ item.path }}'
     owner: '{{ user_host_directory }}'
     group: '{{ group_host_directory }}'
-    mode:  0644
+    mode:  0640
   with_items:
   - from: ssl.key.j2
     path: '{{ nginx_ssl_path }}/{{ ssl_key_fname }}'
   - from: ssl.crt.j2
-    path: '{{ nginx_ssl_path }}/{{ ssl_cert_path }}'
+    path: '{{ nginx_ssl_path }}/{{ ssl_cert_fname }}'
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined
