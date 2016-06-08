@@ -79,7 +79,7 @@
   docker:
     image: '{{ nginx_docker_image_name }}:{{ nginx_docker_image_tag }}'
     name: "jupyterhub-nginx"
-    ports: "80:80"
+    ports: '{{ nginx_exposed_ports }}'
     state: started
     restart_policy: 'always'
     log_driver: 'syslog'
