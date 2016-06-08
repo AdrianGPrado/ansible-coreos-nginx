@@ -26,30 +26,7 @@
 #     - access log
 - include: "setup-{{ ansible_os_family }}.yml"
 
-- name: Define nginx ssl path
-  set_fact:
-    nginx_ssl_path: '{{ nginx_ssl_default_path }}'
-  when: nginx_ssl_path is not defined
-
-- name: Define ssl key and cert file paths
-  set_fact:
-    ssl_cert_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_cert_fname }}'
-    ssl_key_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_key_fname }}'
-  when: ssl_key_fname is defined and
-        ssl_cert_fname is defined
-
-- name: Copy SSL certificates to host system
-  template:
-    src:   '{{ item.from }}'
-    dest:  '{{ item.path }}'
-    owner: '{{ user_host_directory }}'
-    group: '{{ group_host_directory }}'
-    mode:  0644
-  with_items:
-  - from: ssl.key.j2
-    path: '{{ nginx_ssl_default_path }}/{{ ssl_key_fname }}'
-  - from: ssl.crt.j2
-    path: '{{ nginx_ssl_default_path }}/{{ ssl_cert_path }}'
+- include: ssl_config.yml
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined
 
