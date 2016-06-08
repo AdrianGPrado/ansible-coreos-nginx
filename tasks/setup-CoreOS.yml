@@ -1,18 +1,6 @@
 ---
 
-# CoreOS needs the etcd service running.
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Install docker-py
-  pip: name=docker-py version=1.2.3
+- include: "docker-{{ ansible_os_family }}.yml"
 
 - name: Create Host OS nginx volumes folders
   file:
@@ -22,8 +10,17 @@
   with_items:
     - '{{ nginx_host_log }}'
     - '{{ nginx_host_docker_ids }}'
-    - '{{ nginx_host_config }}/certs'
-    - '{{ nginx_host_config }}/etc_conf'
+    - '{{ nginx_work_dir }}'
+
+- name: Simlynk log folder to '{{ nginx_log }}'
+  become: true
+  file: 
+    src='{{ nginx_host_log }}'
+    dest='{{ nginx_log }}'
+    owner='{{ user_host_directory }}'
+    group='{{ group_host_directory }}'
+    state=link
+    mode=0755
 
 - name: Copy default web page to Host OS
   copy:
@@ -41,7 +38,7 @@
   docker_image:
     path: '{{ nginx_host_config }}'
     name: '{{ nginx_docker_image_name }}'
-    tag: aplha
+    tag: '{{ nginx_docker_image_tag }}'
     state: present
   register: image_output
 

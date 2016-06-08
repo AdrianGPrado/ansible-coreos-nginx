@@ -74,14 +74,12 @@ notebook_static_files: /usr/local/lib/python3.4/dist-packages/notebook/static/
 # Vhost configuration
 #------------------------------------------------------------------------------
 
-# Place server config files under /nginx/vars
-nginx_vhosts_fnames:
-  - default_80.yml
-  - default_443.yml
+# Path is relative to the role
+default_nginx_vhosts_files:
+  - ../defaults/default_80.yml
+  # - ../defaults/default_443.yml
 
-nginx_vhosts:
+default_nginx_vhosts:
   - '{{ default_80 }}'
-  - '{{ default_443 }}'
+  # - '{{ default_443 }}'
 
-# overwrite by user DO NOT EDIT HERE!!!
-user_nginx_vhosts: []

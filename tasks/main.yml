@@ -26,40 +26,55 @@
 #     - access log
 - include: "setup-{{ ansible_os_family }}.yml"
 
-- debug:
-    msg: "{{ nginx_container_name }}"
+- include: 'vhost.yml'
 
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_host_directory }}/nginx.conf"
-    owner: "{{ nginx_user }}"
-    group: "{{ root_group }}"
+    dest: "{{ nginx_conf_file_path }}"
+    owner: '{{ user_host_directory }}'
+    group: "{{ group_host_directory }}"
     mode: 0644
+  register: nginx_configured
+
+- name: remove docker container
+  docker:
+    name: my_nginx
+    image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
+    state: '{{ item }}'
+  with_items:
+    - stopped
+    - killed
+    - absent
+
+# - name: Start Docker container
+#   docker:
+#     name: my_nginx
+#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
+#     state: started
+#     ports: 80:80
+#     restart_policy: always
+#     log_driver: 'syslog'
+#     log_opt:
+#       syslog-tag: "{{ nginx_container_name }}"
+
 #   notify:
 #     - restart-docker-nginx
-
 
 # - name: 'start-docker-nginx'
 #   become: yes
 #   docker:
 #     image: "nginx:{{ nginx_docker_tag }}"
 #     name: "{{ nginx_container_name }}"
-#     volumes: '{{ nginx_exposed_volumes }}'
-#     ports: '{{ nginx_published_ports }}'
-#     expose: '{{ nginx_exposed_ports }}'
-#     state: 'started'
 #     restart_policy: 'always'
 #     log_driver: 'syslog'
 #     log_opt:
 #       syslog-tag: "{{ nginx_container_name }}"
 
-
-
 - name: launch nginx container
   docker:
-    image: "nginx:{{ nginx_docker_tag }}"
-    name: "example-nginx"
+    image: '{{ nginx_docker_image_name }}:{{ nginx_docker_image_tag }}'
+    name: "jupyterhub-nginx"
     ports: "80:80"
     state: started
     restart_policy: 'always'

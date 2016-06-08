@@ -1,0 +1,50 @@
+{# from 'with_items' in the calling task #}
+{% set vhost=item %}
+
+#
+# {{ vhost.server_name }} Configuration file.
+#
+server {
+    listen {{ vhost.listen | default('80 default_server') }};
+
+{% if vhost.server_name is defined %}
+    server_name {{ vhost.server_name }};
+{% endif %}
+
+{% if vhost.access_log is defined %}
+    access_log {{ vhost.access_log }};
+{% endif %}
+{% if vhost.error_log is defined %}
+    error_log {{ vhost.error_log }} error;
+{% endif %}
+
+{% if vhost.return is defined %}
+    return {{ vhost.return }};
+{% endif %}
+
+
+{% if vhost.conf_vars is defined %}
+{% for key, value in vhost.conf_vars.iteritems() %}
+{% for v in value %}
+    {{ key }} {{ v }};
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if vhost.error_page is defined %}
+{% for e in vhost.error_page %}
+    error_page {{ e }};
+{% endfor %}
+{% endif %}
+
+{% for l in vhost.locations %}
+    location {{ l.path }} {
+{% for key, value in l.conf.iteritems() %}
+{% for v in value %}
+        {{ key }} {{ v }};
+{% endfor %}
+{% endfor %}
+    }
+{% endfor %}
+
+}

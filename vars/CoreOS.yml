@@ -1,11 +1,21 @@
 ---
 # vars file for ansible-coreos-nginx
 
-
 # Host OS variables, Where are we going to store the configuration that
 # will be pushed to the docker container
 nginx_host_directory: /tmp/nginx
-nginx_host_config: "{{ nginx_host_directory }}/config"
+user_host_directory: core
+group_host_directory: core
+
+# Folder in CoreOS host to store /etc/nginx in Docker container:with
+nginx_host_config: '{{ nginx_host_directory }}/config'
+nginx_work_dir: '{{ nginx_host_config }}/etc_conf'
+
+# Location in CoreOS of nginx.conf to be copied to Docker Container
+nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
+
+nginx_vhost_path: '{{ nginx_work_dir }}/conf.d'
+nginx_default_vhost_path: '{{ nginx_work_dir }}/conf.d/default.conf'
 
 # Just the folders that are going to be mounted as volumes
 nginx_host_log: "{{ nginx_host_directory }}/log"
@@ -19,11 +29,3 @@ nginx_host_docker_container_id:
 
 # Volumens to mount with docker
 nginx_log: /var/log/nginx
-
-# Folder in the host to place the Nginx configuration files
-# To keep the compatibility with non-container systems, it is better to 
-# keep the same name to place the config files
-nginx_work_dir: '{{ nginx_host_config }}'
-
-# DEPRECIATED, it is better to store the container ID.
-nginx_pidfile: /var/run/nginx.pid
