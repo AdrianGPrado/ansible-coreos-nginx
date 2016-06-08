@@ -24,6 +24,3 @@ nginx_log: /var/log/nginx
 # To keep the compatibility with non-container systems, it is better to 
 # keep the same name to place the config files
 nginx_work_dir: '{{ nginx_host_config }}'
-
-# DEPRECIATED, it is better to store the container ID.
-nginx_pidfile: /var/run/nginx.pid

@@ -1,6 +1,9 @@
 ---
 # Docker image variables
 
+__nginx_user: nginx
+root_group: root
+
 # The docker container is the one running Nginx. Not the host.
 # Therefore the variables to fill up the templates must be 
 # inside the docker variables file.
@@ -12,6 +15,8 @@ nginx_conf_file_path: '{{ docker_nginx_conf_path }}/nginx.conf'
 nginx_mime_file_path: '{{ docker_nginx_conf_path }}/mime.types'
 nginx_vhost_path: '{{ docker_nginx_conf_path }}/conf.d'
 nginx_default_vhost_path: '{{ docker_nginx_conf_path }}/conf.d/default.conf'
+
+nginx_pidfile: /var/run/nginx.pid
 
 nginx_root: /usr/share/nginx/html
 
