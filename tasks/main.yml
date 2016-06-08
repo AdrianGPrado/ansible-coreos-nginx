@@ -36,7 +36,7 @@
 - name: Remove Docker container
   docker:
     name: my_nginx
-    image: '{{ nginx_host_docker_image_id }}'
+    image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
     state: '{{ item }}'
   with_items:
     - stopped
@@ -46,7 +46,7 @@
 - name: Start Docker container
   docker:
     name: my_nginx
-    image: '{{ nginx_host_docker_image_id }}'
+    image: '{{ nginx_host_docker_image_id }}:{{ nginx_docker_image_tag }}'
     state: started
     ports: 80:80
     restart_policy: always
