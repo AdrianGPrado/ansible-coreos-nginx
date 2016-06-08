@@ -5,7 +5,7 @@
     nginx_ssl_path: '{{ nginx_ssl_default_path }}'
   when: nginx_ssl_path is not defined
 
-- name: Define ssl key and cert file paths
+- name: Define where nginx is going to look for the ssl keys and certs
   set_fact:
     ssl_cert_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_cert_fname }}'
     ssl_key_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_key_fname }}'
@@ -21,8 +21,8 @@
     mode:  0644
   with_items:
   - from: ssl.key.j2
-    path: '{{ nginx_ssl_default_path }}/{{ ssl_key_fname }}'
+    path: '{{ nginx_ssl_path }}/{{ ssl_key_fname }}'
   - from: ssl.crt.j2
-    path: '{{ nginx_ssl_default_path }}/{{ ssl_cert_path }}'
+    path: '{{ nginx_ssl_path }}/{{ ssl_cert_path }}'
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined

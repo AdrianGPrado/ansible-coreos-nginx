@@ -10,3 +10,7 @@ nginx_ppa_version: stable
 
 # The name of the nginx apt/yum package to install.
 nginx_package_name: "nginx"
+
+# When using a non-dockerized nginx, the place where the ssl certs are copied
+# and where nginx is going to try to find those certificates have to be the same
+nginx_ssl_cert_folder: '{{ nginx_ssl_path }}'
