@@ -75,13 +75,11 @@ notebook_static_files: /usr/local/lib/python3.4/dist-packages/notebook/static/
 #------------------------------------------------------------------------------
 
 # Path is relative to the role
-nginx_vhosts_fnames:
+default_nginx_vhosts_files:
   - ../defaults/default_80.yml
-  - ../defaults/default_443.yml
+  # - ../defaults/default_443.yml
 
-nginx_vhosts:
+default_nginx_vhosts:
   - '{{ default_80 }}'
   # - '{{ default_443 }}'
 
-# overwrite by user DO NOT EDIT HERE!!!
-user_nginx_vhosts: []

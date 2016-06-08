@@ -2,14 +2,22 @@
 
 - name: Load server configuration from files
   include_vars: '{{ item }}'
-  with_items: '{{ nginx_vhosts_fnames }}'
-  when: nginx_vhosts_fnames | length > 0
+  with_items: '{{ default_nginx_vhosts_files }}'
+  when: nginx_vhosts is not defined
 
 - debug:
     msg: '{{ default_80 }}'
 
-- debug:
-    msg: '{{ default_443 }}'
+# - name: Default nginx vhost
+#   set_fact:
+#     nginx_vhosts: '{{ default_nginx_vhosts }}'
+#   when: nginx_vhosts is not defined
+
+# - degug:
+#     msg: '{{ nginx_vhosts }}'
+
+- fail:
+
 
 - name: Remove default nginx vhost config file (if configured).
   file:
