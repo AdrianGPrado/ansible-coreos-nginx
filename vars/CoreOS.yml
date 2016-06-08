@@ -7,6 +7,9 @@
 nginx_host_directory: /tmp/nginx
 nginx_host_config: "{{ nginx_host_directory }}/config"
 
+nginx_vhost_path: '{{ nginx_host_directory }}/conf.d'
+nginx_default_vhost_path: '{{ nginx_host_directory }}/conf.d/default.conf'
+
 # Just the folders that are going to be mounted as volumes
 nginx_host_log: "{{ nginx_host_directory }}/log"
 

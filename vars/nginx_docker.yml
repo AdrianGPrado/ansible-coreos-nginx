@@ -13,9 +13,6 @@ docker_nginx_conf_path: /etc/nginx
 nginx_conf_path: '{{ docker_nginx_conf_path }}/conf.d'
 nginx_conf_file_path: '{{ docker_nginx_conf_path }}/nginx.conf'
 nginx_mime_file_path: '{{ docker_nginx_conf_path }}/mime.types'
-nginx_vhost_path: '{{ docker_nginx_conf_path }}/conf.d'
-nginx_default_vhost_path: '{{ docker_nginx_conf_path }}/conf.d/default.conf'
-
 nginx_pidfile: /var/run/nginx.pid
 
 nginx_root: /usr/share/nginx/html

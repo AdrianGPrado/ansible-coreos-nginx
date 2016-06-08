@@ -17,7 +17,7 @@
   notify:
     - reload nginx
 
-- name: Clean the vhost config directory (if any vhosts are configured).
+- name: Clean the vhost config directory.
   file:
     path: '{{ nginx_vhost_path }}'
     state: '{{ item }}'
@@ -25,37 +25,10 @@
   with_items:
     - absent
     - directory
-  when: nginx_vhosts | length > 0 or 
-        user_nginx_vhosts | length == 0
-  notify:
-    - reload nginx
 
-- name: Add default vhost config file (if any vhosts are configured).
+- name: Add vhost config files.
   template:
     src: '{{ item.from }}'
     dest: '{{ nginx_vhost_path }}/{{ item.fname }}'
     mode: 0644
   with_items: '{{ nginx_vhosts }}'
-  when: nginx_vhosts | length > 0 and
-        user_nginx_vhosts | length == 0
-  notify:
-    - reload nginx
-
-- name: Add user defined vhost config file (if any vhosts are configured).
-  template:
-    src: '{{ item.from }}'
-    dest: '{{ nginx_vhost_path }}/{{ item.fname }}'
-    mode: 0644
-  with_items: '{{ user_nginx_vhosts }}'
-  when: user_nginx_vhosts | length > 0
-  notify:
-    - reload nginx
-
-- name: Remove managed vhost config file (if no vhosts are configured).
-  file:
-    path: '{{ nginx_vhost_path }}/vhosts.conf'
-    state: absent
-  when: nginx_vhosts      | length == 0 and
-        user_nginx_vhosts | length > 0
-  notify:
-    - reload nginx
