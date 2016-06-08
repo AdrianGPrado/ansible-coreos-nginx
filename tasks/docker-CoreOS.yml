@@ -1,0 +1,15 @@
+---
+
+# CoreOS needs the etcd service running.
+- name: Start etcd
+  service: name=etcd.service state=started
+  become: yes
+  become_user: root
+
+- name: Start etcd
+  service: name=etcd.service state=started
+  become: yes
+  become_user: root
+
+- name: Install docker-py
+  pip: name=docker-py version=1.2.3
