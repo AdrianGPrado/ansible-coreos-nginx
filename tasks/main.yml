@@ -29,13 +29,21 @@
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_conf_file_path }}"
-    owner: root
-    group: "{{ root_group }}"
+    dest: "{{ nginx_work_dir }}"
     mode: 0644
   register: nginx_configured
 
-- name: Docker container
+- name: Remove Docker container
+  docker:
+    name: my_nginx
+    image: '{{ nginx_host_docker_image_id }}'
+    state: '{{ item }}'
+  with_items:
+    - stopped
+    - killed
+    - absent
+
+- name: Start Docker container
   docker:
     name: my_nginx
     image: '{{ nginx_host_docker_image_id }}'
