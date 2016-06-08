@@ -1,17 +1,29 @@
 ---
 # vars file for ansible-coreos-nginx
 
-__nginx_user: core
-root_group: core
 
-# Nginx variables They can be OS dependant
-nginx_work_dir: /etc/nginx
-nginx_conf_path: '{{ nginx_work_dir }}/conf.d'
-nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
-nginx_mime_file_path: '{{ nginx_work_dir }}/mime.types'
-nginx_vhost_path: '{{ nginx_work_dir }}/conf.d'
-nginx_default_vhost_path: '{{ nginx_work_dir }}/conf.d/default.conf'
+# Host OS variables, Where are we going to store the configuration that
+# will be pushed to the docker container
+nginx_host_directory: /tmp/nginx
+nginx_host_config: "{{ nginx_host_directory }}/config"
 
+# Just the folders that are going to be mounted as volumes
+nginx_host_log: "{{ nginx_host_directory }}/log"
+
+# It is important to keep the ID's of the images and boxes
+nginx_host_docker_ids: '{{ nginx_host_directory }}/docker_ids'
+
+# Docker ID's
+nginx_host_docker_image_id: 
+nginx_host_docker_container_id:
+
+# Volumens to mount with docker
 nginx_log: /var/log/nginx
-nginx_root: /usr/share/nginx/html
+
+# Folder in the host to place the Nginx configuration files
+# To keep the compatibility with non-container systems, it is better to 
+# keep the same name to place the config files
+nginx_work_dir: '{{ nginx_host_config }}'
+
+# DEPRECIATED, it is better to store the container ID.
 nginx_pidfile: /var/run/nginx.pid

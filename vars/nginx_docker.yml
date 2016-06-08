@@ -1,20 +1,25 @@
 ---
 # Docker image variables
 
-# Host OS variables, Where are we going to store the configuration that
-# will be pushed to the docker container
-nginx_host_directory: /tmp/nginx
-nginx_host_config: "{{ nginx_host_directory }}/config"
-nginx_host_log: "{{ nginx_host_directory }}/log"
-nginx_host_docker_ids: '{{ nginx_host_directory }}/docker_ids'
+# The docker container is the one running Nginx. Not the host.
+# Therefore the variables to fill up the templates must be 
+# inside the docker variables file.
+nginx_log: /var/log/nginx
+docker_nginx_conf_path: /etc/nginx
 
-nginx_host_docker_image_id: 
-nginx_host_docker_container_id:
+nginx_conf_path: '{{ docker_nginx_conf_path }}/conf.d'
+nginx_conf_file_path: '{{ docker_nginx_conf_path }}/nginx.conf'
+nginx_mime_file_path: '{{ docker_nginx_conf_path }}/mime.types'
+nginx_vhost_path: '{{ docker_nginx_conf_path }}/conf.d'
+nginx_default_vhost_path: '{{ docker_nginx_conf_path }}/conf.d/default.conf'
+
+nginx_root: /usr/share/nginx/html
 
 nginx_container_name: nginx
 nginx_docker_tag: alpine
 
 nginx_docker_image_name: nrg_nginx
+nginx_docker_image_tag: alpha
 
 # Copy the files from 'default_nginx' so there is personalized welcome page
 host_static_html_directory: html
@@ -28,13 +33,5 @@ nginx_published_ports:
   - '443:443'
 
 nginx_exposed_volumes:
-  # servers volume
-  - "{{ nginx_host_directory }}/nginx.d:{{ nginx_work_dir }}/nginx.d:ro"
-  # SSL certs volume
-  - "{{ nginx_host_directory }}/certs:{{ nginx_work_dir }}/certs:ro"
-  # main conf file volume
-  - "{{ nginx_host_directory }}/nginx.conf:{{ nginx_work_dir }}/nginx.conf:ro"
   # log volume
   - "{{ nginx_host_directory }}/log:{{ nginx_log }}"
-  # html default web page volume
-  - "{{ nginx_host_directory }}/html:{{ nginx_root }}:ro"
