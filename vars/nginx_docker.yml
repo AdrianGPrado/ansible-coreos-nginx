@@ -24,6 +24,7 @@ nginx_docker_image_tag: alpha
 
 # Copy the files from 'default_nginx' so there is personalized welcome page
 host_static_html_directory: html
+host_static_conf_directory: etc_conf
 
 nginx_exposed_ports:
   - '80'
