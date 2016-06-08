@@ -1,18 +1,6 @@
 ---
 
-# CoreOS needs the etcd service running.
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Install docker-py
-  pip: name=docker-py version=1.2.3
+- include: "docker-{{ ansible_os_family }}.yml"
 
 - name: Create Host OS nginx volumes folders
   file:
@@ -41,7 +29,7 @@
   docker_image:
     path: '{{ nginx_host_config }}'
     name: '{{ nginx_docker_image_name }}'
-    tag: aplha
+    tag: '{{ nginx_docker_image_tag }}'
     state: present
   register: image_output
 
