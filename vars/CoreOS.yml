@@ -11,6 +11,9 @@ group_host_directory: core
 nginx_host_config: '{{ nginx_host_directory }}/config'
 nginx_work_dir: '{{ nginx_host_config }}/etc_conf'
 
+# Folder for ssl certificates in host before copying them into docker container
+nginx_ssl_default_path: '{{ nginx_work_dir }}/certs'
+
 # Location in CoreOS of nginx.conf to be copied to Docker Container
 nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
 
