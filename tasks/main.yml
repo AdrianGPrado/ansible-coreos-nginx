@@ -31,7 +31,9 @@
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_work_dir }}"
+    dest: "{{ nginx_conf_file_path }}"
+    owner: '{{ user_host_directory }}'
+    group: "{{ group_host_directory }}"
     mode: 0644
   register: nginx_configured
 
@@ -55,14 +57,6 @@
 #     log_driver: 'syslog'
 #     log_opt:
 #       syslog-tag: "{{ nginx_container_name }}"
-
-# - name: Copy nginx configuration in place.
-#   template:
-#     src: nginx.conf.j2
-#     dest: "{{ nginx_host_directory }}/nginx.conf"
-#     owner: "{{ nginx_user }}"
-#     group: "{{ root_group }}"
-#     mode: 0644
 
 #   notify:
 #     - restart-docker-nginx

@@ -10,8 +10,7 @@
   with_items:
     - '{{ nginx_host_log }}'
     - '{{ nginx_host_docker_ids }}'
-    - '{{ nginx_host_config }}/certs'
-    - '{{ nginx_host_config }}/etc_conf'
+    - '{{ nginx_work_dir }}'
 
 - name: Copy default web page to Host OS
   copy:

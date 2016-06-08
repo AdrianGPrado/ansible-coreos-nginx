@@ -11,7 +11,6 @@ nginx_log: /var/log/nginx
 docker_nginx_conf_path: /etc/nginx
 
 nginx_conf_path: '{{ docker_nginx_conf_path }}/conf.d'
-nginx_conf_file_path: '{{ docker_nginx_conf_path }}/nginx.conf'
 nginx_mime_file_path: '{{ docker_nginx_conf_path }}/mime.types'
 nginx_pidfile: /var/run/nginx.pid
 
