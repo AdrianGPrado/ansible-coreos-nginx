@@ -1,0 +1,63 @@
+---
+
+- name: Load server configuration from files
+  include_vars: '{{ item }}'
+  with_items: '{{ nginx_vhosts_fnames }}'
+  when: nginx_vhosts_fnames | length > 0
+
+- debug:
+    msg: '{{ default_80 }}'
+
+- debug:
+    msg: '{{ default_443 }}'
+
+- name: Remove default nginx vhost config file (if configured).
+  file:
+    path: '{{ nginx_default_vhost_path }}'
+    state: absent
+  when: nginx_remove_default_vhost
+  notify:
+    - reload nginx
+
+- name: Clean the vhost config directory (if any vhosts are configured).
+  file:
+    path: '{{ nginx_vhost_path }}'
+    state: '{{ item }}'
+    mode: 0755
+  with_items:
+    - absent
+    - directory
+  when: nginx_vhosts | length > 0 or 
+        user_nginx_vhosts | length == 0
+  notify:
+    - reload nginx
+
+- name: Add default vhost config file (if any vhosts are configured).
+  template:
+    src: '{{ item.from }}'
+    dest: '{{ nginx_vhost_path }}/{{ item.fname }}'
+    mode: 0644
+  with_items: '{{ nginx_vhosts }}'
+  when: nginx_vhosts | length > 0 and
+        user_nginx_vhosts | length == 0
+  notify:
+    - reload nginx
+
+- name: Add user defined vhost config file (if any vhosts are configured).
+  template:
+    src: '{{ item.from }}'
+    dest: '{{ nginx_vhost_path }}/{{ item.fname }}'
+    mode: 0644
+  with_items: '{{ user_nginx_vhosts }}'
+  when: user_nginx_vhosts | length > 0
+  notify:
+    - reload nginx
+
+- name: Remove managed vhost config file (if no vhosts are configured).
+  file:
+    path: '{{ nginx_vhost_path }}/vhosts.conf'
+    state: absent
+  when: nginx_vhosts      | length == 0 and
+        user_nginx_vhosts | length > 0
+  notify:
+    - reload nginx

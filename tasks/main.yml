@@ -26,6 +26,8 @@
 #     - access log
 - include: "setup-{{ ansible_os_family }}.yml"
 
+- include: 'vhost.yml'
+
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
