@@ -33,7 +33,7 @@
     mode: 0644
   register: nginx_configured
 
-- name: Remove Docker container
+- name: remove docker container
   docker:
     name: my_nginx
     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
@@ -43,22 +43,16 @@
     - killed
     - absent
 
-- name: Start Docker container
-  docker:
-    name: my_nginx
-    image: '{{ nginx_host_docker_image_id }}:{{ nginx_docker_image_tag }}'
-    state: started
-    ports: 80:80
-    restart_policy: always
-    log_driver: 'syslog'
-    log_opt:
-      syslog-tag: "{{ nginx_container_name }}"
-    # state: present
-    # recreate: yes
-    # exposed_ports:
-    #   - 6379
-    # volumes_from:
-    #   - mydata
+# - name: Start Docker container
+#   docker:
+#     name: my_nginx
+#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
+#     state: started
+#     ports: 80:80
+#     restart_policy: always
+#     log_driver: 'syslog'
+#     log_opt:
+#       syslog-tag: "{{ nginx_container_name }}"
 
 # - name: Copy nginx configuration in place.
 #   template:
@@ -81,13 +75,13 @@
 #     log_opt:
 #       syslog-tag: "{{ nginx_container_name }}"
 
-# - name: launch nginx container
-#   docker:
-#     image: "nginx:{{ nginx_docker_tag }}"
-#     name: "example-nginx"
-#     ports: "80:80"
-#     state: started
-#     restart_policy: 'always'
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
+- name: launch nginx container
+  docker:
+    image: '{{ nginx_docker_image_name }}:{{ nginx_docker_image_tag }}'
+    name: "jupyterhub-nginx"
+    ports: "80:80"
+    state: started
+    restart_policy: 'always'
+    log_driver: 'syslog'
+    log_opt:
+      syslog-tag: "{{ nginx_container_name }}"
