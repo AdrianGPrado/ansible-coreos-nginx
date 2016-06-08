@@ -8,13 +8,16 @@
 - debug:
     msg: '{{ default_80 }}'
 
-# - name: Default nginx vhost
-#   set_fact:
-#     nginx_vhosts: '{{ default_nginx_vhosts }}'
-#   when: nginx_vhosts is not defined
+- debug:
+    msg: '{{ default_nginx_vhosts }}'
 
-# - degug:
-#     msg: '{{ nginx_vhosts }}'
+- name: Default nginx vhost
+  set_fact:
+    nginx_vhosts: '{{ default_nginx_vhosts }}'
+  when: nginx_vhosts is not defined
+
+- debug:
+    msg: '{{ nginx_vhosts }}'
 
 - fail:
 
