@@ -8,46 +8,7 @@
   when: '"{{ ansible_os_family }}" in container_specific_os_family'
   include_vars: nginx_docker.yml
 
-################################################################################
-#                       
-#                             HOST CONFIGURAION
-
-# - include: "setup-{{ ansible_os_family }}.yml"
-
-# - include: "docker-{{ ansible_os_family }}.yml"
-# CoreOS needs the etcd service running.
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
-
-- name: Install docker-py
-  pip: name=docker-py version=1.2.3
-
-- name: Create Host OS nginx volumes folders
-  file:
-    path: '{{ item }}'
-    state: 'directory'
-    mode: '0755'
-  with_items:
-    - '{{ nginx_host_log }}'
-    - '{{ nginx_host_docker_ids }}'
-    - '{{ nginx_work_dir }}'
-
-- name: Simlynk log folder to '{{ nginx_log }}'
-  become: true
-  file: 
-    src='{{ nginx_host_log }}'
-    dest='{{ nginx_log }}'
-    owner='{{ user_host_directory }}'
-    group='{{ group_host_directory }}'
-    state=link
-    mode=0755
+- include: "setup-{{ ansible_os_family }}.yml"
 
 ################################################################################
 #                       
