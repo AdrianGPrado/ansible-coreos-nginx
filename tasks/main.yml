@@ -10,15 +10,11 @@
 
 - include: configure_HostOS.yml
 
-################################################################################
-#                       
-#                             GENERATE COFNIG FILES
 - name: Copy default web page to Host OS
   copy:
     src: '{{ host_static_html_directory }}'
     dest: '{{ nginx_host_config }}'
     mode: '0644'
-  register: conf_html
 
 - include: ssl_config.yml
   when: ssl_key_fname is defined and
@@ -30,37 +26,12 @@
   template:
     src: nginx.conf.j2
     dest: '{{ nginx_conf_file_path }}'
-    owner: '{{ user_host_directory }}'
-    group: '{{ group_host_directory }}'
     mode: 0644
-  register: nginx_configured
-
-
-################################################################################
-#                       
-#                             Docker
 
 # - name: Download Docker image
 #   docker_image:
-#     name: '{{ nginx_container_name }}'
-#     tag: '{{ nginx_docker_tag }}'
+#     name: '{{ nginx_container_name }}/{{ nginx_docker_tag }}'
 #     state: present
-
-# - name: stop nginx container
-#   when: '{{ conf_ssl | changed }}  ||
-#          {{ conf_vhosts | changed }}  ||
-#          {{ conf_html | changed }}'
-#   docker:
-#     image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
-#     name: '{{ nginx_container_name }}'
-#     ports: '{{ nginx_published_ports }}'
-#     expose: '{{ nginx_exposed_ports }}'
-#     volumes: '{{ nginx_exposed_volumes }}' 
-#     state: stopped
-#     restart_policy: 'always'
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
 
 - name: launch nginx container
   docker:

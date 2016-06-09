@@ -30,6 +30,5 @@
     path: '{{ nginx_ssl_path }}/{{ ssl_key_fname }}'
   - from: ssl.crt.j2
     path: '{{ nginx_ssl_path }}/{{ ssl_cert_fname }}'
-  register: conf_ssl
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined
