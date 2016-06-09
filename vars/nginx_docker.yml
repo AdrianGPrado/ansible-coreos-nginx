@@ -37,5 +37,6 @@ nginx_published_ports:
 
 nginx_exposed_volumes:
   - '{{ nginx_host_log }}:{{ nginx_log }}'
-  # - '{{ nginx_work_dir }}:{{ docker_nginx_conf_path }}:ro'
+  # - '{{ nginx_vhost_path }}/conf.d:{{ docker_nginx_conf_path }}/conf.d:ro'
+  - '{{ nginx_ssl_default_path }}:{{ nginx_ssl_cert_folder }}'
   - '{{ nginx_host_config }}/html:{{ nginx_root }}:ro'

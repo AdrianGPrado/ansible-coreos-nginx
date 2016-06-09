@@ -2,11 +2,11 @@
 
 FROM {{ nginx_container_name }}:{{ nginx_docker_tag }}
 
-RUN rm {{ docker_nginx_conf_path }}/conf.d/*.conf
+RUN rm -rf {{ docker_nginx_conf_path }}/conf.d
 RUN rm {{ docker_nginx_conf_path }}/nginx.conf
 
 COPY etc_conf/nginx.conf {{ docker_nginx_conf_path }}/nginx.conf
 
 COPY etc_conf/conf.d/*.conf {{ docker_nginx_conf_path }}/conf.d/
 
-COPY etc_conf/certs {{ docker_nginx_conf_path }}/certs
+{# COPY etc_conf/certs {{ docker_nginx_conf_path }}/certs #}
