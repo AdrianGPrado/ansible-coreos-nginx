@@ -40,12 +40,14 @@
     src: Dockerfile.j2
     dest: '{{ nginx_host_config }}/Dockerfile'
     mode: 0644
+  register: dockerfile_status
 
 ################################################################################
 #                       
 #                             Docker
 
 - name: Build Dockerfile image
+  when: dockerfile_status | changed
   docker_image:
     path: '{{ nginx_host_config }}'
     name: '{{ nginx_docker_image_name }}'
@@ -54,6 +56,7 @@
   register: image_output
 
 - name: Save docker image ID
+  when: dockerfile_status | changed
   set_fact:
     nginx_host_docker_image_id: '{{ image_output.image_id }}'
 
