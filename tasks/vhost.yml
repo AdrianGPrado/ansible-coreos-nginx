@@ -32,3 +32,4 @@
     dest: '{{ nginx_vhost_path }}/{{ item.fname }}'
     mode: 0644
   with_items: '{{ nginx_vhosts }}'
+  register: conf_vhosts

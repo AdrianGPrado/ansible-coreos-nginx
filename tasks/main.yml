@@ -13,6 +13,12 @@
 ################################################################################
 #                       
 #                             GENERATE COFNIG FILES
+- name: Copy default web page to Host OS
+  copy:
+    src: '{{ host_static_html_directory }}'
+    dest: '{{ nginx_host_config }}'
+    mode: '0644'
+  register: conf_html
 
 - include: ssl_config.yml
   when: ssl_key_fname is defined and
@@ -29,45 +35,32 @@
     mode: 0644
   register: nginx_configured
 
-- name: Copy default web page to Host OS
-  copy:
-    src: '{{ host_static_html_directory }}'
-    dest: '{{ nginx_host_config }}'
-    mode: '0644'
-
-- name: Copy docker template
-  template:
-    src: Dockerfile.j2
-    dest: '{{ nginx_host_config }}/Dockerfile'
-    mode: 0644
-  register: dockerfile_status
 
 ################################################################################
 #                       
 #                             Docker
 
-- name: Build Dockerfile image
-  when: dockerfile_status | changed
-  docker_image:
-    path: '{{ nginx_host_config }}'
-    name: '{{ nginx_docker_image_name }}'
-    tag: '{{ nginx_docker_image_tag }}'
-    state: present
+# - name: Download Docker image
+#   docker_image:
+#     name: '{{ nginx_container_name }}'
+#     tag: '{{ nginx_docker_tag }}'
+#     state: present
 
-# - name: Save docker image ID
-#   when: dockerfile_status | changed
-#   set_fact:
-#     nginx_host_docker_image_id: '{{ image_output.image_id }}'
-
-# - name: remove docker container
+# - name: stop nginx container
+#   when: '{{ conf_ssl | changed }}  ||
+#          {{ conf_vhosts | changed }}  ||
+#          {{ conf_html | changed }}'
 #   docker:
-#     name: my_nginx
-#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
-#     state: '{{ item }}'
-#   with_items:
-#     - stopped
-#     - killed
-#     - absent
+#     image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
+#     name: '{{ nginx_container_name }}'
+#     ports: '{{ nginx_published_ports }}'
+#     expose: '{{ nginx_exposed_ports }}'
+#     volumes: '{{ nginx_exposed_volumes }}' 
+#     state: stopped
+#     restart_policy: 'always'
+#     log_driver: 'syslog'
+#     log_opt:
+#       syslog-tag: "{{ nginx_container_name }}"
 
 - name: launch nginx container
   docker:
