@@ -8,10 +8,6 @@
   when: '"{{ ansible_os_family }}" in container_specific_os_family'
   include_vars: nginx_docker.yml
 
-- name: If system is container specific, include Docker variables
-  when: '"{{ ansible_os_family }}" in non_container_specific_os_family'
-  include_vars: nginx_non_docker.yml
-
 - name: Define nginx_user.
   set_fact:
     nginx_user: "{{ __nginx_user }}"
