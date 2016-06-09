@@ -45,18 +45,3 @@
 - name: Save docker image ID
   set_fact:
     nginx_host_docker_image_id: '{{ image_output.image_id }}'
-
-# Move files to the host OS.
-# - Copy SSL certificates
-# - Copy virtual servers
-# - Copy configuration
-
-# - name: pull container
-#   raw: docker pull nginx:1.7.1
-
-# - name: launch nginx container
-#   docker:
-#     image='nginx:1.7.1'
-#     name='example-nginx'
-#     ports='8080:80'
-#     state=started

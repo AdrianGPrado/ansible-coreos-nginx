@@ -1,7 +1,6 @@
 ---
 # tasks file for ansible-coreos-nginx
 
-# Variable setup.
 - name: Include OS Specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -18,12 +17,6 @@
     nginx_user: "{{ __nginx_user }}"
   when: nginx_user is not defined
 
-# Setup:
-#   - write Docker file in host OS
-#   - copy SSL certificates in host OS
-#   - set volumes for:
-#     - error log
-#     - access log
 - include: "setup-{{ ansible_os_family }}.yml"
 
 - include: ssl_config.yml
@@ -50,30 +43,6 @@
     - stopped
     - killed
     - absent
-
-# - name: Start Docker container
-#   docker:
-#     name: my_nginx
-#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
-#     state: started
-#     ports: 80:80
-#     restart_policy: always
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
-
-#   notify:
-#     - restart-docker-nginx
-
-# - name: 'start-docker-nginx'
-#   become: yes
-#   docker:
-#     image: "nginx:{{ nginx_docker_tag }}"
-#     name: "{{ nginx_container_name }}"
-#     restart_policy: 'always'
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
 
 - name: launch nginx container
   docker:
