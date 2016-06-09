@@ -13,7 +13,66 @@
     nginx_user: "{{ __nginx_user }}"
   when: nginx_user is not defined
 
-- include: "setup-{{ ansible_os_family }}.yml"
+# - include: "setup-{{ ansible_os_family }}.yml"
+
+# - include: "docker-{{ ansible_os_family }}.yml"
+# CoreOS needs the etcd service running.
+- name: Start etcd
+  service: name=etcd.service state=started
+  become: yes
+  become_user: root
+
+- name: Start etcd
+  service: name=etcd.service state=started
+  become: yes
+  become_user: root
+
+- name: Install docker-py
+  pip: name=docker-py version=1.2.3
+
+- name: Create Host OS nginx volumes folders
+  file:
+    path: '{{ item }}'
+    state: 'directory'
+    mode: '0755'
+  with_items:
+    - '{{ nginx_host_log }}'
+    - '{{ nginx_host_docker_ids }}'
+    - '{{ nginx_work_dir }}'
+
+- name: Simlynk log folder to '{{ nginx_log }}'
+  become: true
+  file: 
+    src='{{ nginx_host_log }}'
+    dest='{{ nginx_log }}'
+    owner='{{ user_host_directory }}'
+    group='{{ group_host_directory }}'
+    state=link
+    mode=0755
+
+- name: Copy default web page to Host OS
+  copy:
+    src: '{{ host_static_html_directory }}'
+    dest: '{{ nginx_host_config }}'
+    mode: '0644'
+
+- name: Copy docker template
+  template:
+    src: Dockerfile.j2
+    dest: '{{ nginx_host_config }}/Dockerfile'
+    mode: 0644
+
+- name: Build Dockerfile image
+  docker_image:
+    path: '{{ nginx_host_config }}'
+    name: '{{ nginx_docker_image_name }}'
+    tag: '{{ nginx_docker_image_tag }}'
+    state: present
+  register: image_output
+
+- name: Save docker image ID
+  set_fact:
+    nginx_host_docker_image_id: '{{ image_output.image_id }}'
 
 - include: ssl_config.yml
   when: ssl_key_fname is defined and
