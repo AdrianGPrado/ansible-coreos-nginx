@@ -12,11 +12,6 @@
 #                       
 #                             HOST CONFIGURAION
 
-- name: Define nginx_user.
-  set_fact:
-    nginx_user: "{{ __nginx_user }}"
-  when: nginx_user is not defined
-
 # - include: "setup-{{ ansible_os_family }}.yml"
 
 # - include: "docker-{{ ansible_os_family }}.yml"

@@ -1,7 +1,7 @@
 ---
 # Docker image variables
 
-__nginx_user: nginx
+nginx_user: nginx
 root_group: root
 
 # The docker container is the one running Nginx. Not the host.
