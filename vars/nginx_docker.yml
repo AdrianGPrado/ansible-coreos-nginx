@@ -36,5 +36,6 @@ nginx_published_ports:
   - '443:443'
 
 nginx_exposed_volumes:
-  # log volume
-  - "{{ nginx_host_directory }}/log:{{ nginx_log }}"
+  - '{{ nginx_host_log }}:{{ nginx_log }}'
+  # - '{{ nginx_work_dir }}:{{ docker_nginx_conf_path }}:ro'
+  - '{{ nginx_host_config }}/html:{{ nginx_root }}:ro'

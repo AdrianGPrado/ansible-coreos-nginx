@@ -2,9 +2,7 @@
 
 FROM {{ nginx_container_name }}:{{ nginx_docker_tag }}
 
-RUN rm -rf {{ nginx_conf_path }}
+RUN rm -rf {{ nginx_conf_path }}/*.conf
 RUN rm {{ docker_nginx_conf_path }}/nginx.conf
-
-COPY {{ host_static_html_directory }} {{ nginx_root }}
 
 COPY {{ host_static_conf_directory }} {{ docker_nginx_conf_path }}
