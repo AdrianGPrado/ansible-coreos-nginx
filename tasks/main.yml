@@ -8,6 +8,10 @@
   when: '"{{ ansible_os_family }}" in container_specific_os_family'
   include_vars: nginx_docker.yml
 
+################################################################################
+#                       
+#                             HOST CONFIGURAION
+
 - name: Define nginx_user.
   set_fact:
     nginx_user: "{{ __nginx_user }}"
@@ -50,29 +54,9 @@
     state=link
     mode=0755
 
-- name: Copy default web page to Host OS
-  copy:
-    src: '{{ host_static_html_directory }}'
-    dest: '{{ nginx_host_config }}'
-    mode: '0644'
-
-- name: Copy docker template
-  template:
-    src: Dockerfile.j2
-    dest: '{{ nginx_host_config }}/Dockerfile'
-    mode: 0644
-
-- name: Build Dockerfile image
-  docker_image:
-    path: '{{ nginx_host_config }}'
-    name: '{{ nginx_docker_image_name }}'
-    tag: '{{ nginx_docker_image_tag }}'
-    state: present
-  register: image_output
-
-- name: Save docker image ID
-  set_fact:
-    nginx_host_docker_image_id: '{{ image_output.image_id }}'
+################################################################################
+#                       
+#                             GENERATE COFNIG FILES
 
 - include: ssl_config.yml
   when: ssl_key_fname is defined and
@@ -88,6 +72,34 @@
     group: '{{ group_host_directory }}'
     mode: 0644
   register: nginx_configured
+
+- name: Copy default web page to Host OS
+  copy:
+    src: '{{ host_static_html_directory }}'
+    dest: '{{ nginx_host_config }}'
+    mode: '0644'
+
+- name: Copy docker template
+  template:
+    src: Dockerfile.j2
+    dest: '{{ nginx_host_config }}/Dockerfile'
+    mode: 0644
+
+################################################################################
+#                       
+#                             Docker
+
+- name: Build Dockerfile image
+  docker_image:
+    path: '{{ nginx_host_config }}'
+    name: '{{ nginx_docker_image_name }}'
+    tag: '{{ nginx_docker_image_tag }}'
+    state: present
+  register: image_output
+
+- name: Save docker image ID
+  set_fact:
+    nginx_host_docker_image_id: '{{ image_output.image_id }}'
 
 - name: remove docker container
   docker:
