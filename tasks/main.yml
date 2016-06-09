@@ -28,11 +28,6 @@
     dest: '{{ nginx_conf_file_path }}'
     mode: 0644
 
-# - name: Download Docker image
-#   docker_image:
-#     name: '{{ nginx_container_name }}/{{ nginx_docker_tag }}'
-#     state: present
-
 - name: launch nginx container
   docker:
     image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
@@ -40,7 +35,7 @@
     ports: '{{ nginx_published_ports }}'
     expose: '{{ nginx_exposed_ports }}'
     volumes: '{{ nginx_exposed_volumes }}' 
-    state: started
+    state: reloaded
     restart_policy: 'always'
     log_driver: 'syslog'
     log_opt:
