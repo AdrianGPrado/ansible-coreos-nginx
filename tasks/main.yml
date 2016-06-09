@@ -53,27 +53,26 @@
     name: '{{ nginx_docker_image_name }}'
     tag: '{{ nginx_docker_image_tag }}'
     state: present
-  register: image_output
 
-- name: Save docker image ID
-  when: dockerfile_status | changed
-  set_fact:
-    nginx_host_docker_image_id: '{{ image_output.image_id }}'
+# - name: Save docker image ID
+#   when: dockerfile_status | changed
+#   set_fact:
+#     nginx_host_docker_image_id: '{{ image_output.image_id }}'
 
-- name: remove docker container
-  docker:
-    name: my_nginx
-    image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
-    state: '{{ item }}'
-  with_items:
-    - stopped
-    - killed
-    - absent
+# - name: remove docker container
+#   docker:
+#     name: my_nginx
+#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
+#     state: '{{ item }}'
+#   with_items:
+#     - stopped
+#     - killed
+#     - absent
 
 - name: launch nginx container
   docker:
-    image: '{{ nginx_docker_image_name }}:{{ nginx_docker_image_tag }}'
-    name: "jupyterhub-nginx"
+    image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
+    name: '{{ nginx_container_name }}'
     ports: '{{ nginx_published_ports }}'
     expose: '{{ nginx_exposed_ports }}'
     volumes: '{{ nginx_exposed_volumes }}' 
