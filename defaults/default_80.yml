@@ -2,20 +2,17 @@
 
 default_80:
   fname: port_80.conf
-  server_name: 'nrgjhub.com'
   from: vhosts.j2
   listen: '80 default_server'
-  error_page:
+  server_name: 'nrgjhub.com'
+  error_pages:
     - '404    /404.html'
     - '500 502 503 504  /50x.html'
   locations:
-    - path: '/'
-      conf:
-        root: 
-          - '{{ nginx_root }}'
-        index:
-          - 'index.html index.htm'
-    - path: '= /50x.html'
-      conf:
-        root: 
-          - 'html'
+    - location_path: '/'
+      location_conf: |
+        root {{ nginx_root }};
+        index index.html index.htm;
+    - location_path: '= /50x.html'
+      location_conf: |
+        root html;

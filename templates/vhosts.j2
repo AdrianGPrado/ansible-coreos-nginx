@@ -13,6 +13,7 @@ server {
 {% if vhost.access_log is defined %}
     access_log {{ vhost.access_log }};
 {% endif %}
+
 {% if vhost.error_log is defined %}
     error_log {{ vhost.error_log }} error;
 {% endif %}
@@ -21,29 +22,24 @@ server {
     return {{ vhost.return }};
 {% endif %}
 
-
-{% if vhost.conf_vars is defined %}
-{% for key, value in vhost.conf_vars.iteritems() %}
-{% for v in value %}
-    {{ key }} {{ v }};
-{% endfor %}
-{% endfor %}
+{% if vhost.ssl_certs_configuration is defined %}
+    {{ vhost.ssl_certs_configuration }}
 {% endif %}
 
-{% if vhost.error_page is defined %}
-{% for e in vhost.error_page %}
-    error_page {{ e }};
+{% if vhost.error_pages is defined %}
+{% for page in vhost.error_pages %}
+    error_page {{ page }};
 {% endfor %}
 {% endif %}
 
 {% for l in vhost.locations %}
-    location {{ l.path }} {
-{% for key, value in l.conf.iteritems() %}
-{% for v in value %}
-        {{ key }} {{ v }};
-{% endfor %}
-{% endfor %}
+    location {{ l.location_path }} {
+        {{ l.location_conf }}
     }
 {% endfor %}
+
+{% if vhost.ssl_extra_configuration is defined %}
+    {{ vhost.ssl_extra_configuration }}
+{% endif %}
 
 }
