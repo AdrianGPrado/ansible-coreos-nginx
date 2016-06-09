@@ -8,7 +8,7 @@
   when: '"{{ ansible_os_family }}" in container_specific_os_family'
   include_vars: nginx_docker.yml
 
-- include: "setup-{{ ansible_os_family }}.yml"
+- include: configure_HostOS.yml
 
 ################################################################################
 #                       
