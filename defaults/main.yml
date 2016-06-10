@@ -1,7 +1,8 @@
 ---
 # defaults file for ansible-coreos-nginx
 
-nginx_host_directory: /tmp/nginx
+# Were to place nginx configuration files and logs
+nginx_hostOS_folder: /tmp/nginx
 
 container_specific_os_family:
   - CoreOS

@@ -6,28 +6,15 @@
 user_host_directory: core
 group_host_directory: core
 
-# Folder in CoreOS host to store /etc/nginx in Docker container:with
-nginx_host_config: '{{ nginx_host_directory }}/config'
-nginx_work_dir: '{{ nginx_host_config }}/etc_conf'
+# Nginx Configuration files and log
+nginx_host_config: '{{ nginx_hostOS_folder }}/config'
+nginx_host_log: "{{ nginx_hostOS_folder }}/log"
 
-# Folder for ssl certificates in host before copying them into docker container
+# Folder in CoreOS host to store /etc/nginx in Docker container
+nginx_work_dir: '{{ nginx_host_config }}/etc_conf'
+nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
+nginx_vhost_path: '{{ nginx_work_dir }}/conf.d'
 nginx_ssl_default_path: '{{ nginx_work_dir }}/certs'
 
-# Location in CoreOS of nginx.conf to be copied to Docker Container
-nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
 
-nginx_vhost_path: '{{ nginx_work_dir }}/conf.d'
-nginx_default_vhost_path: '{{ nginx_work_dir }}/conf.d/default.conf'
-
-# Just the folders that are going to be mounted as volumes
-nginx_host_log: "{{ nginx_host_directory }}/log"
-
-# It is important to keep the ID's of the images and boxes
-nginx_host_docker_ids: '{{ nginx_host_directory }}/docker_ids'
-
-# Docker ID's
-nginx_host_docker_image_id: 
-nginx_host_docker_container_id:
-
-# Volumens to mount with docker
 nginx_log: /var/log/nginx
