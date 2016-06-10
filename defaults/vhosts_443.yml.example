@@ -12,11 +12,11 @@ default_443:
     - location_path: '/'
       location_conf: |
         index index.html index.htm;
-        root {{ nginx_root }};
+        root  {{ nginx_root }};
   ssl_certs_configuration: |
     ssl on;
-    ssl_certificate     {{ nginx_ssl_path }}/{{ ssl_cert_fname }};
-    ssl_certificate_key {{ nginx_ssl_path }}/{{ ssl_key_fname }};
+    ssl_certificate     {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
   ssl_extra_configuration: |
     ssl_ciphers               "AES128+EECDH:AES128+EDH";
     ssl_stapling              on; # Requires nginx >= 1.3.;
@@ -26,3 +26,9 @@ default_443:
     resolver_timeout          5m;
     ssl_session_timeout       5m;
     ssl_prefer_server_ciphers on;
+   vhost_extra_configuration: |
+     proxy_buffering          off;
+     proxy_set_header         X-Real-IP $remote_addr;
+     proxy_set_header         X-Scheme $scheme;
+     proxy_set_header         X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header         Host $http_host;

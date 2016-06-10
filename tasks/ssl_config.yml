@@ -1,0 +1,25 @@
+---
+
+- name: Define nginx ssl path
+  set_fact:
+    nginx_ssl_path: '{{ nginx_ssl_certs_dir }}'
+  when: nginx_ssl_path is not defined
+
+- name: Create Host OS SSL folder
+  file:
+    path: '{{ host_nginx_ssl }}'
+    state: 'directory'
+    mode: '0755'
+
+- name: Copy SSL certificates to host OS
+  template:
+    src:   '{{ item.from }}'
+    dest:  '{{ item.path }}'
+    owner: '{{ host_nginx_user }}'
+    group: '{{ host_nginx_group }}'
+    mode:  0640
+  with_items:
+  - from: ssl.key.j2
+    path: '{{ host_nginx_ssl }}/{{ ssl_key_fname }}'
+  - from: ssl.crt.j2
+    path: '{{ host_nginx_ssl }}/{{ ssl_cert_fname }}'

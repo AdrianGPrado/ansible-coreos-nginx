@@ -1,43 +1,40 @@
 ---
 # defaults file for ansible-coreos-nginx
 
+# Were to place nginx configuration files and logs
+nginx_hostOS_folder: /tmp/nginx
+
 container_specific_os_family:
   - CoreOS
 
-non_container_specific_os_family:
-  - 'RedHat'
-  - 'Ubuntu'
-  - 'Debian'
-  - 'FreeBSD'
-
-# Nginx configuration variables.
+# Nginx.conf configuration variables.
 nginx_worker_processes: "1"
 nginx_worker_connections: "1024"
 nginx_multi_accept: "off"
 
-nginx_error_log: "/var/log/nginx/error.log warn"
 nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
+nginx_error_log: "/var/log/nginx/error.log warn"
 
 nginx_sendfile: "on"
 nginx_tcp_nopush: "on"
 nginx_tcp_nodelay: "on"
 
+nginx_server_names_hash_bucket_size: "64"
+nginx_client_max_body_size: "64m"
+
 nginx_keepalive_timeout: "65"
 nginx_keepalive_requests: "100"
 
-nginx_client_max_body_size: "64m"
+## Example on optional parameters to configure nginx.
 
-nginx_server_names_hash_bucket_size: "64"
+# Optional configuration parameters for `nginx.conf`
+# nginx_proxy_cache_path: ""
 
-nginx_proxy_cache_path: ""
-
-nginx_extra_conf_options: ""
 # Example extra main options, used within the main nginx's context:
 #   nginx_extra_conf_options: |
 #     env VARIABLE;
 #     include /etc/nginx/main.d/*.conf;
 
-nginx_extra_http_options: ""
 # Example extra http options, printed inside the main server http config:
 #    nginx_extra_http_options: |
 #      proxy_buffering    off;
@@ -46,9 +43,8 @@ nginx_extra_http_options: ""
 #      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
 #      proxy_set_header   Host $http_host;
 
-nginx_remove_default_vhost: true
-
-nginx_upstreams: []
+# I List with the Nginx upstreams
+# nginx_upstreams: []
 # - name: myapp1
 #   strategy: "ip_hash" # "least_conn", etc.
 #   servers: {
@@ -57,29 +53,28 @@ nginx_upstreams: []
 #     "srv3.example.com"
 #   }
 
-# These are the paths to the SSL certificate and key. This should be overwritten
-# in an encrypted vault file.
-ssl_cert_path: ''
-ssl_key_path: ''
+#------------------------------------------------------------------------------
+# Nginx vhosts configuration
+
+nginx_remove_default_vhost: true
+
+# These are the path and names to the SSL certificate and key. 
+# This should be overwritten in an encrypted vault file.
+nginx_ssl_certs_dir: ''
+ssl_cert_fname: ''
+ssl_key_fname: ''
 
 # These are the contents of the SSL certificate and key themselves. These should
 # also be overwritten in an encrypted vault file.
 ssl_cert: ''
 ssl_key: ''
 
-# This is the path to the static files for the singleuser notebook server
-notebook_static_files: /usr/local/lib/python3.4/dist-packages/notebook/static/
-
-#------------------------------------------------------------------------------
-# Vhost configuration
-#------------------------------------------------------------------------------
-
 # Path is relative to the role
 default_nginx_vhosts_files:
   - ../defaults/default_80.yml
-  # - ../defaults/default_443.yml
+  - ../defaults/default_443.yml
 
 default_nginx_vhosts:
   - '{{ default_80 }}'
-  # - '{{ default_443 }}'
+  - '{{ default_443 }}'
 

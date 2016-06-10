@@ -1,82 +1,42 @@
 ---
 # tasks file for ansible-coreos-nginx
 
-# Variable setup.
-- name: Include OS Specific variables.
+- fail: msg='OS not suported'
+  when: '"{{ ansible_os_family }}" not in container_specific_os_family'
+
+- name: Include host variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: If system is container specific, include Docker variables
-  when: '"{{ ansible_os_family }}" in container_specific_os_family'
+- name: Include Docker variables
   include_vars: nginx_docker.yml
 
-- name: If system is container specific, include Docker variables
-  when: '"{{ ansible_os_family }}" in non_container_specific_os_family'
-  include_vars: nginx_non_docker.yml
+- include: configure_HostOS.yml
 
-- name: Define nginx_user.
-  set_fact:
-    nginx_user: "{{ __nginx_user }}"
-  when: nginx_user is not defined
+- name: Copy default web page to Host OS
+  copy:
+    src: '{{ host_static_html_directory }}'
+    dest: '{{ nginx_hostOS_folder }}'
+    mode: '0644'
 
-# Setup:
-#   - write Docker file in host OS
-#   - copy SSL certificates in host OS
-#   - set volumes for:
-#     - error log
-#     - access log
-- include: "setup-{{ ansible_os_family }}.yml"
+- include: ssl_config.yml
+  when: ssl_key_fname is defined and ssl_cert_fname is defined
 
 - include: 'vhost.yml'
 
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_conf_file_path }}"
-    owner: '{{ user_host_directory }}'
-    group: "{{ group_host_directory }}"
+    dest: '{{ host_nginx_conf_file }}'
     mode: 0644
-  register: nginx_configured
-
-- name: remove docker container
-  docker:
-    name: my_nginx
-    image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
-    state: '{{ item }}'
-  with_items:
-    - stopped
-    - killed
-    - absent
-
-# - name: Start Docker container
-#   docker:
-#     name: my_nginx
-#     image: '{{ nginx_docker_image_name }}/{{ nginx_docker_image_tag }}'
-#     state: started
-#     ports: 80:80
-#     restart_policy: always
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
-
-#   notify:
-#     - restart-docker-nginx
-
-# - name: 'start-docker-nginx'
-#   become: yes
-#   docker:
-#     image: "nginx:{{ nginx_docker_tag }}"
-#     name: "{{ nginx_container_name }}"
-#     restart_policy: 'always'
-#     log_driver: 'syslog'
-#     log_opt:
-#       syslog-tag: "{{ nginx_container_name }}"
 
 - name: launch nginx container
   docker:
-    image: '{{ nginx_docker_image_name }}:{{ nginx_docker_image_tag }}'
-    name: "jupyterhub-nginx"
-    ports: "80:80"
-    state: started
+    image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
+    name: '{{ nginx_container_name }}'
+    ports: '{{ nginx_published_ports }}'
+    expose: '{{ nginx_exposed_ports }}'
+    volumes: '{{ nginx_exposed_volumes }}' 
+    state: reloaded
     restart_policy: 'always'
     log_driver: 'syslog'
     log_opt:

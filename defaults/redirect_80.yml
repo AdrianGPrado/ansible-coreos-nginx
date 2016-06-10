@@ -11,8 +11,4 @@ default_80:
   locations:
     - location_path: '/'
       location_conf: |
-        root {{ nginx_root }};
-        index index.html index.htm;
-    - location_path: '= /50x.html'
-      location_conf: |
-        root html;
+        rewrite        ^ https://$host$request_uri? permanent;
