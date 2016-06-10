@@ -59,6 +59,6 @@ http {
 {% endfor %}
 {% endif %}
 
-    include {{ nginx_conf_path }}/*.conf;
+    include {{ nginx_vhosts_dir }}/*.conf;
 
 }

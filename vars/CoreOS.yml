@@ -15,3 +15,6 @@ host_nginx_log: /var/log/nginx
 host_nginx_conf_file: '{{ host_nginx_conf }}/nginx.conf'
 host_nginx_vhosts: '{{ host_nginx_conf }}/conf.d'
 host_nginx_ssl: '{{ host_nginx_conf }}/certs'
+
+# Copy the files from 'default_nginx' so there is personalized welcome page
+host_static_html_directory: html

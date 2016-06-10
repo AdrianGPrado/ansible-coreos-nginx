@@ -60,7 +60,7 @@ nginx_remove_default_vhost: true
 
 # These are the path and names to the SSL certificate and key. 
 # This should be overwritten in an encrypted vault file.
-nginx_ssl_cert_folder: ''
+nginx_ssl_certs_dir: ''
 ssl_cert_fname: ''
 ssl_key_fname: ''
 

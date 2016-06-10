@@ -7,8 +7,8 @@
 
 - name: Define where nginx is going to look for the ssl keys and certs
   set_fact:
-    ssl_cert_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_cert_fname }}'
-    ssl_key_path: '{{ nginx_ssl_cert_folder }}/{{ ssl_key_fname }}'
+    ssl_cert_path: '{{ nginx_ssl_certs_dir }}/{{ ssl_cert_fname }}'
+    ssl_key_path: '{{ nginx_ssl_certs_dir }}/{{ ssl_key_fname }}'
   when: ssl_key_fname is defined and
         ssl_cert_fname is defined
 

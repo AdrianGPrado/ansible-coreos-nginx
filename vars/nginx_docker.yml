@@ -2,7 +2,6 @@
 # Docker image variables
 
 nginx_user: nginx
-# root_group: root
 
 # The docker container is the one running Nginx. Not the host.
 # Therefore the variables to fill up the templates must be 
@@ -10,23 +9,18 @@ nginx_user: nginx
 nginx_log: /var/log/nginx
 nginx_conf_dir: /etc/nginx
 
-nginx_ssl_cert_folder: '{{ nginx_conf_dir }}/certs'
-nginx_conf_path: '{{ nginx_conf_dir }}/conf.d'
-nginx_mime_file_path: '{{ nginx_conf_dir }}/mime.types'
 nginx_pidfile: /var/run/nginx.pid
+nginx_vhosts_dir: '{{ nginx_conf_dir }}/conf.d'
+nginx_ssl_certs_dir: '{{ nginx_conf_dir }}/certs'
+nginx_mime_file_path: '{{ nginx_conf_dir }}/mime.types'
 
 nginx_root: /usr/share/nginx/html
 
+# Docker image
 nginx_container_name: nginx
 nginx_docker_tag: alpine
 
-nginx_docker_image_name: nrg_nginx
-nginx_docker_image_tag: alpha
-
-# Copy the files from 'default_nginx' so there is personalized welcome page
-host_static_html_directory: html
-host_static_conf_directory: etc_conf
-
+# Docker container configuation
 nginx_exposed_ports:
   - '80'
   - '443'
@@ -39,5 +33,5 @@ nginx_exposed_volumes:
   - '{{ host_nginx_log }}:{{ nginx_log }}'
   - '{{ host_nginx_conf_file }}:{{ nginx_conf_dir }}/nginx.conf:ro'
   - '{{ host_nginx_vhosts }}:{{ nginx_conf_dir }}/conf.d:ro'
-  - '{{ host_nginx_ssl }}:{{ nginx_ssl_cert_folder }}:ro'
+  - '{{ host_nginx_ssl }}:{{ nginx_ssl_certs_dir }}:ro'
   - '{{ host_nginx_html }}:{{ nginx_root }}:ro'
