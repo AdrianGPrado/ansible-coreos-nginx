@@ -42,4 +42,8 @@ server {
     {{ vhost.ssl_extra_configuration }}
 {% endif %}
 
+{% if vhost.vhost_extra_configuration is defined %}
+    {{ vhost.vhost_extra_configuration }}
+{% endif %}
+
 }
