@@ -2,15 +2,8 @@
 
 - name: Define nginx ssl path
   set_fact:
-    nginx_ssl_path: '{{ host_nginx_ssl }}'
+    nginx_ssl_path: '{{ nginx_ssl_certs_dir }}'
   when: nginx_ssl_path is not defined
-
-- name: Define where nginx is going to look for the ssl keys and certs
-  set_fact:
-    ssl_cert_path: '{{ nginx_ssl_certs_dir }}/{{ ssl_cert_fname }}'
-    ssl_key_path: '{{ nginx_ssl_certs_dir }}/{{ ssl_key_fname }}'
-  when: ssl_key_fname is defined and
-        ssl_cert_fname is defined
 
 - name: Create Host OS SSL folder
   file:
@@ -27,8 +20,6 @@
     mode:  0640
   with_items:
   - from: ssl.key.j2
-    path: '{{ nginx_ssl_path }}/{{ ssl_key_fname }}'
+    path: '{{ host_nginx_ssl }}/{{ ssl_key_fname }}'
   - from: ssl.crt.j2
-    path: '{{ nginx_ssl_path }}/{{ ssl_cert_fname }}'
-  when: ssl_key_fname is defined and
-        ssl_cert_fname is defined
+    path: '{{ host_nginx_ssl }}/{{ ssl_cert_fname }}'

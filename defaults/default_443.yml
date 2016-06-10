@@ -15,8 +15,8 @@ default_443:
         root {{ nginx_root }};
   ssl_certs_configuration: |
     ssl on;
-    ssl_certificate     {{ ssl_cert_path }};
-    ssl_certificate_key {{ ssl_key_path }};
+    ssl_certificate     {{ nginx_ssl_path }}/{{ ssl_cert_fname }};
+    ssl_certificate_key {{ nginx_ssl_path }}/{{ ssl_key_fname }};
   ssl_extra_configuration: |
     ssl_ciphers               "AES128+EECDH:AES128+EDH";
     ssl_stapling              on; # Requires nginx >= 1.3.;

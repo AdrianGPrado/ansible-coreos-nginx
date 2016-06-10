@@ -19,8 +19,7 @@
     mode: '0644'
 
 - include: ssl_config.yml
-  when: ssl_key_fname is defined and
-        ssl_cert_fname is defined
+  when: ssl_key_fname is defined and ssl_cert_fname is defined
 
 - include: 'vhost.yml'
 
