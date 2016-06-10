@@ -1,0 +1,14 @@
+---
+
+default_80:
+  fname: port_80.conf
+  from: vhosts.j2
+  listen: '80 default_server'
+  server_name: 'nrgjhub.com'
+  error_pages:
+    - '404    /404.html'
+    - '500 502 503 504  /50x.html'
+  locations:
+    - location_path: '/'
+      location_conf: |
+        rewrite        ^ https://$host$request_uri? permanent;

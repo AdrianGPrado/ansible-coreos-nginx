@@ -1,0 +1,27 @@
+---
+
+- name: Load server configuration from files
+  include_vars: '{{ item }}'
+  with_items: '{{ default_nginx_vhosts_files }}'
+
+- name: Default nginx vhost
+  set_fact:
+    nginx_vhosts: '{{ default_nginx_vhosts }}'
+  when: nginx_vhosts is not defined
+
+- name: Clean the vhost config directory.
+  file:
+    path: '{{ host_nginx_vhosts }}'
+    state: '{{ item }}'
+    mode: 0755
+  when: nginx_remove_default_vhost
+  with_items:
+    - absent
+    - directory
+
+- name: Add vhost config files.
+  template:
+    src: '{{ item.from }}'
+    dest: '{{ host_nginx_vhosts }}/{{ item.fname }}'
+    mode: 0644
+  with_items: '{{ nginx_vhosts }}'

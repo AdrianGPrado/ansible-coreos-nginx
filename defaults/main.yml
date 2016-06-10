@@ -1,2 +1,80 @@
 ---
 # defaults file for ansible-coreos-nginx
+
+# Were to place nginx configuration files and logs
+nginx_hostOS_folder: /tmp/nginx
+
+container_specific_os_family:
+  - CoreOS
+
+# Nginx.conf configuration variables.
+nginx_worker_processes: "1"
+nginx_worker_connections: "1024"
+nginx_multi_accept: "off"
+
+nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
+nginx_error_log: "/var/log/nginx/error.log warn"
+
+nginx_sendfile: "on"
+nginx_tcp_nopush: "on"
+nginx_tcp_nodelay: "on"
+
+nginx_server_names_hash_bucket_size: "64"
+nginx_client_max_body_size: "64m"
+
+nginx_keepalive_timeout: "65"
+nginx_keepalive_requests: "100"
+
+## Example on optional parameters to configure nginx.
+
+# Optional configuration parameters for `nginx.conf`
+# nginx_proxy_cache_path: ""
+
+# Example extra main options, used within the main nginx's context:
+#   nginx_extra_conf_options: |
+#     env VARIABLE;
+#     include /etc/nginx/main.d/*.conf;
+
+# Example extra http options, printed inside the main server http config:
+#    nginx_extra_http_options: |
+#      proxy_buffering    off;
+#      proxy_set_header   X-Real-IP $remote_addr;
+#      proxy_set_header   X-Scheme $scheme;
+#      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+#      proxy_set_header   Host $http_host;
+
+# I List with the Nginx upstreams
+# nginx_upstreams: []
+# - name: myapp1
+#   strategy: "ip_hash" # "least_conn", etc.
+#   servers: {
+#     "srv1.example.com",
+#     "srv2.example.com weight=3",
+#     "srv3.example.com"
+#   }
+
+#------------------------------------------------------------------------------
+# Nginx vhosts configuration
+
+nginx_remove_default_vhost: true
+
+# These are the path and names to the SSL certificate and key. 
+# This should be overwritten in an encrypted vault file.
+nginx_ssl_certs_dir: ''
+ssl_cert_fname: ''
+ssl_key_fname: ''
+
+# These are the contents of the SSL certificate and key themselves. These should
+# also be overwritten in an encrypted vault file.
+ssl_cert: ''
+ssl_key: ''
+
+# Path is relative to the role
+default_nginx_vhosts_files:
+  - ../defaults/default_80.yml
+  - ../defaults/default_443.yml
+
+default_nginx_vhosts:
+  - '{{ default_80 }}'
+  - '{{ default_443 }}'
+

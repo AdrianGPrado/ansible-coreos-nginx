@@ -13,19 +13,16 @@ Requirements
 
 In order to effectively run ansible, the target machine needs to have a python interpreter. Coreos machines are minimal and do not ship with any version of python. To get around this limitation we can install [pypy](http://pypy.org/), a lightweight python interpreter. The coreos-bootstrap role will install pypy for us and we will update our inventory file to use the installed python interpreter.
 
-```
-ansible-galaxy install AdrianGPrado.coreos-bootstrap
-```
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+    ansible-galaxy install AdrianGPrado.coreos-bootstrap
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Boostrap CoreOS with pypy, you can use the boostrap of your preference. Nevertheless I try to keep `AdrianGPrado.coreos-bootstrap` update and running.
+
+    - host: servers
+      roles:
+        - { role: AdrianGPrado.coreos-bootstrap }
 
 Example Playbook
 ----------------
@@ -35,6 +32,57 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: servers
       roles:
          - { role: AdrianGPrado.coreos-nginx }
+
+Example with self configured nginx vhosts.
+
+    - hosts: servers
+
+      vars_files:
+      - secrets.vault.yml
+
+      vars:
+        vhosts:
+        - default_80:
+          fname: port_80.conf
+          from: vhosts.j2
+          listen: '80 default_server'
+          server_name: 'nrgjhub.com'
+          error_pages:
+            - '404    /404.html'
+            - '500 502 503 504  /50x.html'
+          locations:
+            - location_path: '/'
+              location_conf: |
+                rewrite        ^ https://$host$request_uri? permanent;
+        - default_443:
+          fname: 'default_443.conf'
+          from: vhosts.j2
+          listen: '443 ssl'
+          server_name: 'nrgjhub.com'
+          error_pages:
+            - '404              /404.html'
+            - '500 502 503 504  /50x.html'
+          locations:
+            - location_path: '/'
+              location_conf: |
+                index index.html index.htm;
+                root /usr/share/nginx/html;
+          ssl_certs_configuration: |
+            ssl on;
+            ssl_certificate     {{ nginx_ssl_path }}/{{ ssl_cert_fname }};
+            ssl_certificate_key {{ nginx_ssl_path }}/{{ ssl_key_fname }};
+          ssl_extra_configuration: |
+            ssl_ciphers               "AES128+EECDH:AES128+EDH";
+            ssl_stapling              on; # Requires nginx >= 1.3.;
+            ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
+            ssl_session_cache         shared:SSL:1m;
+            ssl_stapling_verify       on; # Requires nginx => 1.3.;
+            resolver_timeout          5m;
+            ssl_session_timeout       5m;
+            ssl_prefer_server_ciphers on;
+
+      roles:
+         - { role: coreos-nginx, nginx_vhosts: '{{ vhosts }}' }
 
 License
 -------

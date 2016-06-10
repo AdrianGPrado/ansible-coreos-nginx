@@ -1,23 +1,43 @@
 ---
 # tasks file for ansible-coreos-nginx
-- name: Include OS-specific variables.
-  debug:
-    msg: "{{ ansible_os_family }}"
 
-- name: Start etcd
-  service: name=etcd.service state=started
-  become: yes
-  become_user: root
+- fail: msg='OS not suported'
+  when: '"{{ ansible_os_family }}" not in container_specific_os_family'
 
-- name: Install docker-py
-  pip: name=docker-py version=1.2.3
+- name: Include host variables.
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- name: pull container
-  raw: docker pull nginx:1.7.1
+- name: Include Docker variables
+  include_vars: nginx_docker.yml
+
+- include: configure_HostOS.yml
+
+- name: Copy default web page to Host OS
+  copy:
+    src: '{{ host_static_html_directory }}'
+    dest: '{{ nginx_hostOS_folder }}'
+    mode: '0644'
+
+- include: ssl_config.yml
+  when: ssl_key_fname is defined and ssl_cert_fname is defined
+
+- include: 'vhost.yml'
+
+- name: Copy nginx configuration in place.
+  template:
+    src: nginx.conf.j2
+    dest: '{{ host_nginx_conf_file }}'
+    mode: 0644
 
 - name: launch nginx container
   docker:
-    image="nginx:1.7.1"
-    name="example-nginx"
-    ports="8080:80"
-    state=started
+    image: '{{ nginx_container_name }}:{{ nginx_docker_tag }}'
+    name: '{{ nginx_container_name }}'
+    ports: '{{ nginx_published_ports }}'
+    expose: '{{ nginx_exposed_ports }}'
+    volumes: '{{ nginx_exposed_volumes }}' 
+    state: reloaded
+    restart_policy: 'always'
+    log_driver: 'syslog'
+    log_opt:
+      syslog-tag: "{{ nginx_container_name }}"
