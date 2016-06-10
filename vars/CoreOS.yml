@@ -3,7 +3,6 @@
 
 # Host OS variables, Where are we going to store the configuration that
 # will be pushed to the docker container
-nginx_host_directory: /tmp/nginx
 user_host_directory: core
 group_host_directory: core
 
