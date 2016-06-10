@@ -1,20 +1,10 @@
+---
 galaxy_info:
-
   author: Adrian G Prado
-
-  description: Simple instalation of nginx with docker. The role allows custom definition of virtual hosts by using the variable `nginx_vhosts`
-
-  license: license (MIT)
-
+  description: CoreOS Nginx configurable server
+  license: MIT
   min_ansible_version: 1.9
-
-  platforms:
-   - name: CoreOS
-     versions:
-      - alpha
-
-  galaxy_tags: 
-   - web
-   - Docker
-
+  categories:
+    - system
+    - web
 dependencies: []
