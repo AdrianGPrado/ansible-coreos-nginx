@@ -1,11 +1,13 @@
 ---
 # tasks file for ansible-coreos-nginx
 
-- name: Include OS Specific variables.
+- fail: msg='OS not suported'
+  when: '"{{ ansible_os_family }}" not in container_specific_os_family'
+
+- name: Include host variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: If system is container specific, include Docker variables
-  when: '"{{ ansible_os_family }}" in container_specific_os_family'
+- name: Include Docker variables
   include_vars: nginx_docker.yml
 
 - include: configure_HostOS.yml
