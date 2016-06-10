@@ -3,18 +3,15 @@
 
 # Host OS variables, Where are we going to store the configuration that
 # will be pushed to the docker container
-user_host_directory: core
-group_host_directory: core
+host_nginx_user: core
+host_nginx_group: core
 
 # Nginx Configuration files and log
-nginx_host_config: '{{ nginx_hostOS_folder }}/config'
-nginx_host_log: "{{ nginx_hostOS_folder }}/log"
+host_nginx_conf: '{{ nginx_hostOS_folder }}/conf'
+host_nginx_html: '{{ nginx_hostOS_folder }}/html'
+host_nginx_log: /var/log/nginx
 
 # Folder in CoreOS host to store /etc/nginx in Docker container
-nginx_work_dir: '{{ nginx_host_config }}/etc_conf'
-nginx_conf_file_path: '{{ nginx_work_dir }}/nginx.conf'
-nginx_vhost_path: '{{ nginx_work_dir }}/conf.d'
-nginx_ssl_default_path: '{{ nginx_work_dir }}/certs'
-
-
-nginx_log: /var/log/nginx
+host_nginx_conf_file: '{{ host_nginx_conf }}/nginx.conf'
+host_nginx_vhosts: '{{ host_nginx_conf }}/conf.d'
+host_nginx_ssl: '{{ host_nginx_conf }}/certs'

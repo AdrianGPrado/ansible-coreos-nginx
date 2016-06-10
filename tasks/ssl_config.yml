@@ -2,7 +2,7 @@
 
 - name: Define nginx ssl path
   set_fact:
-    nginx_ssl_path: '{{ nginx_ssl_default_path }}'
+    nginx_ssl_path: '{{ host_nginx_ssl }}'
   when: nginx_ssl_path is not defined
 
 - name: Define where nginx is going to look for the ssl keys and certs
@@ -14,7 +14,7 @@
 
 - name: Create Host OS SSL folder
   file:
-    path: '{{ nginx_ssl_default_path }}'
+    path: '{{ host_nginx_ssl }}'
     state: 'directory'
     mode: '0755'
 
@@ -22,8 +22,8 @@
   template:
     src:   '{{ item.from }}'
     dest:  '{{ item.path }}'
-    owner: '{{ user_host_directory }}'
-    group: '{{ group_host_directory }}'
+    owner: '{{ host_nginx_user }}'
+    group: '{{ host_nginx_group }}'
     mode:  0640
   with_items:
   - from: ssl.key.j2

@@ -15,7 +15,7 @@
 - name: Copy default web page to Host OS
   copy:
     src: '{{ host_static_html_directory }}'
-    dest: '{{ nginx_host_config }}'
+    dest: '{{ nginx_hostOS_folder }}'
     mode: '0644'
 
 - include: ssl_config.yml
@@ -27,7 +27,7 @@
 - name: Copy nginx configuration in place.
   template:
     src: nginx.conf.j2
-    dest: '{{ nginx_conf_file_path }}'
+    dest: '{{ host_nginx_conf_file }}'
     mode: 0644
 
 - name: launch nginx container

@@ -1,22 +1,16 @@
 ---
 
 - include: "docker-{{ ansible_os_family }}.yml"
+  when: '"{{ ansible_os_family }}" in container_specific_os_family'
 
 - name: Create Host OS nginx volumes folders
+  become: true
   file:
     path: '{{ item }}'
     state: 'directory'
+    owner: '{{ host_nginx_user }}'
+    group: '{{ host_nginx_group }}'
     mode: '0755'
   with_items:
-    - '{{ nginx_host_log }}'
-    - '{{ nginx_work_dir }}'
-
-- name: Simlynk log folder to '{{ nginx_log }}'
-  become: true
-  file: 
-    src='{{ nginx_host_log }}'
-    dest='{{ nginx_log }}'
-    owner='{{ user_host_directory }}'
-    group='{{ group_host_directory }}'
-    state=link
-    mode=0755
+    - '{{ host_nginx_log }}'
+    - '{{ host_nginx_conf }}'
