@@ -1,6 +1,6 @@
 ---
 
-default_80:
+redirect_80_to_443:
   fname: port_80.conf
   from: vhosts.j2
   listen: '80 default_server'

@@ -58,7 +58,7 @@ nginx_keepalive_requests: "100"
 
 nginx_remove_default_vhost: true
 
-# These are the path and names to the SSL certificate and key. 
+# These are the path and names to the SSL certificate and key.
 # This should be overwritten in an encrypted vault file.
 nginx_ssl_certs_dir: ''
 ssl_cert_fname: ''
@@ -72,9 +72,9 @@ ssl_key: ''
 # Path is relative to the role
 default_nginx_vhosts_files:
   - ../defaults/default_80.yml
+  - ../defaults/redirect_80.yml
   - ../defaults/default_443.yml
 
 default_nginx_vhosts:
   - '{{ default_80 }}'
   - '{{ default_443 }}'
-
