@@ -1,8 +1,5 @@
 ---
 
-- include: "docker-{{ ansible_os_family }}.yml"
-  when: '"{{ ansible_os_family }}" in container_specific_os_family'
-
 - name: Create Host OS nginx volumes folders
   become: true
   file:
